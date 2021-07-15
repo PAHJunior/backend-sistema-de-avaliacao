@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const StudentTests = mongoose.Schema({
+const StudentTestsSchema = mongoose.Schema({
   title: {
     type: String,
     required: true
@@ -46,6 +46,6 @@ const StudentTests = mongoose.Schema({
   }
 })
 
-const StudentTests = mongoose.model('StudentTests', StudentTests)
+const StudentTests = mongoose.model('StudentTests', StudentTestsSchema)
 
 module.exports = StudentTests

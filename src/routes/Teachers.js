@@ -1,14 +1,18 @@
-var express = require('express');
-var router = express.Router();
-const Middlewares = require('../middlewares/Auth')
+const express = require('express')
+const router = express.Router()
+// const Middlewares = require('../middlewares/Auth')
 
 const {
   index,
-  create
+  create,
+  show,
+  modify
 } = require('../controllers/Teachers')
 
-router.use(Middlewares)
-router.get('/', index);
-router.post('/', create);
+// router.use(Middlewares)
+router.get('/', index)
+router.get('/:teacherID', show)
+router.put('/:teacherID', modify)
+router.post('/', create)
 
-module.exports = router;
+module.exports = router

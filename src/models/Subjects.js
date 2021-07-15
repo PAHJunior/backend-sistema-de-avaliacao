@@ -9,6 +9,9 @@ const SubjectsSchema = mongoose.Schema({
   subtitle: {
     type: String
   },
+  status: {
+    type: Boolean
+  },
   createAt: {
     type: Date,
     default: Date.now()

@@ -1,24 +1,24 @@
-const Teachers = require('../models/Teachers')
+const Students = require('../models/Exams')
 
 const create = async (req, res, next) => {
   try {
     const {
       name,
-      email,
+      studentRecord,
       password,
       subjects
     } = req.body
 
-    let teacher = await Teachers.create({
+    let student = await Students.create({
       name,
-      email,
+      studentRecord,
       password,
       subjects
     })
 
-    teacher = await Teachers.findById(teacher._id).populate('subjects')
+    student = await Students.findById(student._id).populate('subjects')
 
-    return res.send(teacher)
+    return res.send(student)
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -27,9 +27,9 @@ const create = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const teacher = await Teachers.find().populate('subjects')
+    const students = await Students.find().populate('subjects')
 
-    return res.send(teacher)
+    return res.send(students)
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -38,10 +38,10 @@ const index = async (req, res, next) => {
 
 const show = async (req, res, next) => {
   try {
-    const { teacherID } = req.params
-    const teacher = await Teachers.findById(teacherID).populate('subjects')
+    const { studentID } = req.params
+    const student = await Students.findById(studentID).populate('subjects')
 
-    return res.send(teacher)
+    return res.send(student)
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -50,30 +50,30 @@ const show = async (req, res, next) => {
 
 const modify = async (req, res, next) => {
   try {
-    const { teacherID } = req.params
+    const { studentID } = req.params
     const {
       name,
-      email,
+      studentRecord,
       password,
-      subjects,
-      status
+      status,
+      subjects
     } = req.body
 
-    await Teachers.updateOne({
-      _id: teacherID
+    await Students.updateOne({
+      _id: studentID
     }, {
       name,
-      email,
+      studentRecord,
       password,
-      subjects,
-      status
+      status,
+      subjects
     }, {
       runValidators: true
     })
 
-    const teacher = await Teachers.findById(teacherID).populate('subjects')
+    const exam = await Students.findById(studentID).populate('subjects')
 
-    return res.send(teacher)
+    return res.send(exam)
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -83,6 +83,6 @@ const modify = async (req, res, next) => {
 module.exports = {
   create,
   index,
-  show,
-  modify
+  modify,
+  show
 }

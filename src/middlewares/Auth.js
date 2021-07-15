@@ -1,4 +1,4 @@
-const createError = require('http-errors');
+const createError = require('http-errors')
 const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
@@ -9,12 +9,12 @@ module.exports = (req, res, next) => {
     }
 
     const parts = auth.split(' ')
-    
+
     if (!parts.length !== 2) {
       next(createError(401))
     }
 
-    const [ scheme, token ] = parts
+    const [scheme, token] = parts
 
     if (!/^Beare$/i.test(scheme)) {
       next(createError(401))
@@ -24,11 +24,10 @@ module.exports = (req, res, next) => {
       if (err) {
         next(createError(401))
       }
-      
+
       req.teacherID = decoded.teacherID
       next()
     })
-
   } catch (error) {
     next(error)
   }

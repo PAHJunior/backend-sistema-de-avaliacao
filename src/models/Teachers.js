@@ -17,6 +17,10 @@ const TeachersSchema = mongoose.Schema({
     require: true,
     select: false
   },
+  status: {
+    type: Boolean,
+    default: true
+  },
   subjects: [
     {
       type: mongoose.Schema.Types.ObjectId,

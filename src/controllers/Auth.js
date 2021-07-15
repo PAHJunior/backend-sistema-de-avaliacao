@@ -27,7 +27,7 @@ const teacherAutenticate = async (req, res, next) => {
       expiresIn: '15m'
     })
 
-    return res.send({ teacher, token})
+    return res.send({ teacher, token })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)

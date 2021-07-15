@@ -27,6 +27,10 @@ const ExamsSchema = mongoose.Schema({
       }
     }
   ],
+  status: {
+    type: Boolean,
+    default: true
+  },
   createAt: {
     type: Date,
     default: Date.now()

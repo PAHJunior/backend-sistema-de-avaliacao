@@ -1,24 +1,19 @@
-const Exams = require('../models/Exams')
+const Subjects = require('../models/Subjects')
 
 const create = async (req, res, next) => {
   try {
     const {
       title,
-      subjects,
-      status,
-      questions
+      status
     } = req.body
 
-    let exam = await Exams.create({
+    let subject = await Subjects.create({
       title,
-      subjects,
-      status,
-      questions
+      status
     })
 
-    exam = await Exams.findById(exam._id).populate('subjects')
-
-    return res.send({ exam })
+    subject = await Subjects.findById(subject._id)
+    return res.send({ subject })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -27,9 +22,17 @@ const create = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const exams = await Exams.find().populate('subjects')
+    const { status } = req.query
 
-    return res.send({ exams })
+    let query = {}
+
+    if (status) {
+      query = { status: { $in: ['true', true] } }
+    }
+
+    const subjects = await Subjects.find(query)
+
+    return res.send({ subjects })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -38,10 +41,10 @@ const index = async (req, res, next) => {
 
 const show = async (req, res, next) => {
   try {
-    const { examID } = req.params
-    const exam = await Exams.findById(examID).populate('subjects')
+    const { subjectID } = req.params
+    const subject = await Subjects.findById(subjectID)
 
-    return res.send({ exam })
+    return res.send({ subject })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -50,28 +53,24 @@ const show = async (req, res, next) => {
 
 const modify = async (req, res, next) => {
   try {
-    const { examID } = req.params
+    const { subjectID } = req.params
     const {
       title,
-      subjects,
-      status,
-      questions
+      status
     } = req.body
 
-    await Exams.updateOne({
-      _id: examID
+    await Subjects.updateOne({
+      _id: subjectID
     }, {
       title,
-      subjects,
-      status,
-      questions
+      status
     }, {
       runValidators: true
     })
 
-    const exam = await Exams.findById(examID).populate('subjects')
+    const subject = await Subjects.findById(subjectID)
 
-    return res.send({ exam })
+    return res.send({ subject })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)

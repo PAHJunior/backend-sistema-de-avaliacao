@@ -6,11 +6,9 @@ const SubjectsSchema = mongoose.Schema({
     unique: true,
     required: true
   },
-  subtitle: {
-    type: String
-  },
   status: {
-    type: Boolean
+    type: Boolean,
+    default: true
   },
   createAt: {
     type: Date,

@@ -19,8 +19,7 @@ const teacherAutenticate = async (req, res, next) => {
       return res.status(404).send({ error: 'E-mail e/ou senha invalido' })
     }
 
-    delete teacher.password
-
+    teacher.password = undefined
     const token = jwt.sign({
       teacherID: teacher._id
     }, process.env.SECRET_JWT, {

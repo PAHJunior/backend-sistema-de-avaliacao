@@ -1,4 +1,5 @@
 const Teachers = require('../models/Teachers')
+const Subjects = require('../models/Subjects')
 
 const create = async (req, res, next) => {
   try {
@@ -9,16 +10,27 @@ const create = async (req, res, next) => {
       subjects
     } = req.body
 
-    let teacher = await Teachers.create({
+    const teacher = await Teachers.create({
       name,
       email,
-      password,
-      subjects
+      password
     })
 
-    teacher = await Teachers.findById(teacher._id).populate('subjects')
+    await Promise.all(subjects.map(async (title) => {
+      let subject = await Subjects.findOne({ title: title })
 
-    return res.send(teacher)
+      if (!subject._id) {
+        subject = await Subjects.create({
+          title: title
+        })
+      }
+
+      teacher.subjects.push(subject)
+    }))
+
+    await teacher.save()
+
+    return res.send({ teacher })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -27,9 +39,9 @@ const create = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const teacher = await Teachers.find().populate('subjects')
+    const teachers = await Teachers.find().populate('subjects')
 
-    return res.send(teacher)
+    return res.send({ teachers })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -41,7 +53,7 @@ const show = async (req, res, next) => {
     const { teacherID } = req.params
     const teacher = await Teachers.findById(teacherID).populate('subjects')
 
-    return res.send(teacher)
+    return res.send({ teacher })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -51,29 +63,38 @@ const show = async (req, res, next) => {
 const modify = async (req, res, next) => {
   try {
     const { teacherID } = req.params
+
     const {
       name,
       email,
-      password,
       subjects,
       status
     } = req.body
 
-    await Teachers.updateOne({
-      _id: teacherID
-    }, {
+    const teacher = await Teachers.findByIdAndUpdate(teacherID, {
       name,
       email,
-      password,
-      subjects,
       status
     }, {
-      runValidators: true
+      new: true
     })
 
-    const teacher = await Teachers.findById(teacherID).populate('subjects')
+    teacher.subjects = []
+    await Promise.all(subjects.map(async (title) => {
+      let subject = await Subjects.findOne({ title: title })
 
-    return res.send(teacher)
+      if (!subject) {
+        subject = await Subjects.create({
+          title: title
+        })
+      }
+
+      teacher.subjects.push(subject)
+    }))
+
+    await teacher.save()
+
+    return res.send({ teacher })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)

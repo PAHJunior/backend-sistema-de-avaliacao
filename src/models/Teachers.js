@@ -34,8 +34,10 @@ const TeachersSchema = mongoose.Schema({
 })
 
 TeachersSchema.pre('save', async function (next) {
-  const hash = await bcrypt.hash(this.password, 10)
-  this.password = hash
+  if (this.password) {
+    const hash = await bcrypt.hash(this.password, 10)
+    this.password = hash
+  }
 })
 
 const Teachers = mongoose.model('Teachers', TeachersSchema)

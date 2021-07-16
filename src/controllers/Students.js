@@ -1,4 +1,4 @@
-const Students = require('../models/Exams')
+const Students = require('../models/Students')
 
 const create = async (req, res, next) => {
   try {
@@ -18,7 +18,7 @@ const create = async (req, res, next) => {
 
     student = await Students.findById(student._id).populate('subjects')
 
-    return res.send(student)
+    return res.send({ student })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -29,7 +29,7 @@ const index = async (req, res, next) => {
   try {
     const students = await Students.find().populate('subjects')
 
-    return res.send(students)
+    return res.send({ students })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -41,7 +41,7 @@ const show = async (req, res, next) => {
     const { studentID } = req.params
     const student = await Students.findById(studentID).populate('subjects')
 
-    return res.send(student)
+    return res.send({ student })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)
@@ -71,9 +71,9 @@ const modify = async (req, res, next) => {
       runValidators: true
     })
 
-    const exam = await Students.findById(studentID).populate('subjects')
+    const student = await Students.findById(studentID).populate('subjects')
 
-    return res.send(exam)
+    return res.send({ student })
   } catch (error) {
     console.error(error)
     return res.status(400).send(error)

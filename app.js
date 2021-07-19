@@ -18,7 +18,7 @@ mongoose
     useFindAndModify: false
   })
   .then(() => {
-    console.log('Server has started!')
+    console.info('Server has started!')
   })
 
 app.use(logger('dev'))

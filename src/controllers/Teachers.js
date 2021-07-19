@@ -10,7 +10,7 @@ const create = async (req, res, next) => {
       subjects
     } = req.body
 
-    const teacher = await Teachers.create({
+    const teacher = new Teachers({
       name,
       email,
       password

@@ -22,8 +22,7 @@ const teacherAutenticate = async (req, res, next) => {
       return res.status(400).send({ errors: errors })
     }
 
-    const match = await bcrypt.compare(password, teacher.password)
-
+    const match = bcrypt.compareSync(password, teacher.password)
     if (!match) {
       const errors = [
         {
@@ -67,8 +66,7 @@ const studentAutenticate = async (req, res, next) => {
       return res.status(400).send({ errors: errors })
     }
 
-    const match = await bcrypt.compare(password, student.password)
-    if (!match) {
+    if (!(await bcrypt.compare(password, student.password))) {
       const errors = [
         {
           status: 400,

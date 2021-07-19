@@ -35,7 +35,8 @@ const TeachersSchema = mongoose.Schema({
 
 TeachersSchema.pre('save', async function (next) {
   if (this.password) {
-    const hash = await bcrypt.hash(this.password, 10)
+    const salt = bcrypt.genSaltSync()
+    const hash = bcrypt.hashSync(this.password, salt)
     this.password = hash
   }
 })

@@ -34,7 +34,8 @@ const StudentsSchema = mongoose.Schema({
 
 StudentsSchema.pre('save', async function (next) {
   if (this.password) {
-    const hash = await bcrypt.hash(this.password, 10)
+    const salt = await bcrypt.genSaltSync()
+    const hash = await bcrypt.hashSync(this.password, salt)
     this.password = hash
   }
 })

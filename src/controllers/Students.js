@@ -1,4 +1,5 @@
 const Students = require('../models/Students')
+const Subjects = require('../models/Subjects')
 
 const create = async (req, res, next) => {
   try {
@@ -9,14 +10,25 @@ const create = async (req, res, next) => {
       subjects
     } = req.body
 
-    let student = await Students.create({
+    const student = await Students.create({
       name,
       studentRecord,
-      password,
-      subjects
+      password
     })
 
-    student = await Students.findById(student._id).populate('subjects')
+    await Promise.all(subjects.map(async (title) => {
+      let subject = await Subjects.findOne({ title: title })
+
+      if (!subject._id) {
+        subject = await Subjects.create({
+          title: title
+        })
+      }
+
+      student.subjects.push(subject)
+    }))
+
+    await student.save()
 
     return res.send({ student })
   } catch (error) {
@@ -59,19 +71,31 @@ const modify = async (req, res, next) => {
       subjects
     } = req.body
 
-    await Students.updateOne({
+    const student = await Students.findByIdAndUpdate({
       _id: studentID
     }, {
       name,
       studentRecord,
       password,
-      status,
-      subjects
+      status
     }, {
       runValidators: true
     })
 
-    const student = await Students.findById(studentID).populate('subjects')
+    student.subjects = []
+    await Promise.all(subjects.map(async (title) => {
+      let subject = await Subjects.findOne({ title: title })
+
+      if (!subject._id) {
+        subject = await Subjects.create({
+          title: title
+        })
+      }
+
+      student.subjects.push(subject)
+    }))
+
+    await student.save()
 
     return res.send({ student })
   } catch (error) {

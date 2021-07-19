@@ -30,6 +30,9 @@ app.use(cors())
 
 app.use('/api/subjects', require('./src/routes/Subjects'))
 app.use('/api/teachers', require('./src/routes/Teachers'))
+app.use('/api/students', require('./src/routes/Students'))
+app.use('/api/exams', require('./src/routes/Exams'))
+app.use('/api/studenttests', require('./src/routes/StudentTests'))
 app.use('/api/auth', require('./src/routes/Auth'))
 
 // catch 404 and forward to error handler

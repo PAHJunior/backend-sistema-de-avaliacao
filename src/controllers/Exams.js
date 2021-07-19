@@ -3,15 +3,15 @@ const Exams = require('../models/Exams')
 const create = async (req, res, next) => {
   try {
     const {
-      title,
-      subjects,
+      description,
+      subject,
       status,
       questions
     } = req.body
 
     let exam = await Exams.create({
-      title,
-      subjects,
+      description,
+      subject,
       status,
       questions
     })
@@ -27,7 +27,15 @@ const create = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const exams = await Exams.find().populate('subjects')
+    const { status } = req.query
+
+    let query = {}
+
+    if (status) {
+      query = { status: { $in: ['true', true] } }
+    }
+
+    const exams = await Exams.find(query).populate('subject')
 
     return res.send({ exams })
   } catch (error) {
@@ -39,7 +47,7 @@ const index = async (req, res, next) => {
 const show = async (req, res, next) => {
   try {
     const { examID } = req.params
-    const exam = await Exams.findById(examID).populate('subjects')
+    const exam = await Exams.findById(examID).populate('subject')
 
     return res.send({ exam })
   } catch (error) {
@@ -52,7 +60,7 @@ const modify = async (req, res, next) => {
   try {
     const { examID } = req.params
     const {
-      title,
+      description,
       subjects,
       status,
       questions
@@ -61,7 +69,7 @@ const modify = async (req, res, next) => {
     await Exams.updateOne({
       _id: examID
     }, {
-      title,
+      description,
       subjects,
       status,
       questions
@@ -69,7 +77,7 @@ const modify = async (req, res, next) => {
       runValidators: true
     })
 
-    const exam = await Exams.findById(examID).populate('subjects')
+    const exam = await Exams.findById(examID).populate('subject')
 
     return res.send({ exam })
   } catch (error) {

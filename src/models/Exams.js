@@ -1,30 +1,35 @@
 const mongoose = require('mongoose')
 
 const ExamsSchema = mongoose.Schema({
-  title: {
+  description: {
     type: String,
     required: true
   },
-  subjects: {
+  subject: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subjects'
   },
   questions: [
     {
-      title: {
-        type: String,
-        required: true
+      label: {
+        type: String
+      },
+      name: {
+        type: String
       },
       description: {
         type: String
       },
-      isCorrect: {
-        type: Boolean
-      },
-      createAt: {
-        type: Date,
-        default: Date.now()
-      }
+      alternatives: [
+        {
+          description: {
+            type: String
+          },
+          isCorrect: {
+            type: Boolean
+          }
+        }
+      ]
     }
   ],
   status: {

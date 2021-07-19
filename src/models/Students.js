@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 
-const SubjectsSchema = mongoose.Schema({
+const StudentsSchema = mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -31,6 +32,13 @@ const SubjectsSchema = mongoose.Schema({
   }
 })
 
-const Subjects = mongoose.model('Subjects', SubjectsSchema)
+StudentsSchema.pre('save', async function (next) {
+  if (this.password) {
+    const hash = await bcrypt.hash(this.password, 10)
+    this.password = hash
+  }
+})
 
-module.exports = Subjects
+const Students = mongoose.model('Students', StudentsSchema)
+
+module.exports = Students

@@ -83,7 +83,7 @@ const modify = async (req, res, next) => {
     await Promise.all(subjects.map(async (title) => {
       let subject = await Subjects.findOne({ title: title })
 
-      if (!subject) {
+      if (!subject._id) {
         subject = await Subjects.create({
           title: title
         })

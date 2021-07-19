@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const StudentTestsSchema = mongoose.Schema({
-  title: {
+  description: {
     type: String,
     required: true
   },
@@ -9,36 +9,44 @@ const StudentTestsSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Students'
   },
-  subjects: {
+  subject: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subjects'
   },
   questions: [
     {
-      title: {
-        type: String,
-        required: true
+      label: {
+        type: String
+      },
+      name: {
+        type: String
       },
       description: {
         type: String
       },
-      choice: {
-        type: Boolean
-      },
-      isCorrect: {
-        type: Boolean
-      },
-      createAt: {
-        type: Date,
-        default: Date.now()
-      }
+      alternatives: [
+        {
+          description: {
+            type: String
+          },
+          isCorrect: {
+            type: Boolean
+          },
+          isChoice: {
+            type: Boolean,
+            default: false
+          }
+        }
+      ]
     }
   ],
   startAt: {
-    type: Date
+    type: Date,
+    default: null
   },
   finishAt: {
-    type: Date
+    type: Date,
+    default: null
   },
   createAt: {
     type: Date,

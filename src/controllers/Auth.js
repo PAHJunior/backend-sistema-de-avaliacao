@@ -10,13 +10,19 @@ const teacherAutenticate = async (req, res, next) => {
       password
     } = req.body
 
-    console.log(email,
-      password)
-
     const teacher = await Teachers.findOne({ email }).select('+password')
 
-    console.log(teacher.name)
-    if (!teacher || await !bcrypt.compare(password, teacher.password)) {
+    if (!teacher) {
+      const errors = [
+        {
+          status: 400,
+          message: 'E-mail e/ou senha invalido'
+        }
+      ]
+      return res.status(400).send({ errors: errors })
+    }
+
+    if (await !bcrypt.compare(password, teacher.password)) {
       const errors = [
         {
           status: 400,
@@ -49,7 +55,17 @@ const studentAutenticate = async (req, res, next) => {
 
     const student = await Students.findOne({ studentRecord }).select('+password')
 
-    if (!student || await !bcrypt.compare(password, student.password)) {
+    if (!student) {
+      const errors = [
+        {
+          status: 400,
+          message: 'E-mail e/ou senha invalido'
+        }
+      ]
+      return res.status(400).send({ errors: errors })
+    }
+
+    if (await !bcrypt.compare(password, student.password)) {
       const errors = [
         {
           status: 400,
